@@ -12,16 +12,21 @@
     theme: {
       extend: {
         colors: {
-          fg: '#12161C',
-          muted: '#6B7280',
-          line: '#E6E8EB',
-          accent: '#E8B84B',
-          'accent-dark': '#A87A1B',
-          navy: '#011842',
-          'navy-2': '#1B3055',
+          fg: '#162032',
+          muted: '#6E7A8E',
+          line: '#E2DCD0',
+          accent: '#D5A535',        // light-theme champagne gold (real --accent)
+          'accent-ink': '#8B6A1F',  // darkened for small text-on-paper contexts
+          'accent-night': '#E8BE4E',// dark-theme gold (real --accent, dark)
+          ink: '#162032',           // real --fg / --accent-fg (both themes)
+          paper: '#FBF7F0',         // real --bg (light theme)
+          surface2: '#F4EEE2',      // real --surface-2
+          night: '#0E1726',         // real --bg (dark theme)
+          'night-surface': '#15203A', // real --surface (dark theme)
         },
         fontFamily: {
           sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          display: ['Georgia', 'Times New Roman', 'serif'],
         },
         maxWidth: { 'page': '1180px' },
       }
@@ -40,12 +45,18 @@
   details > summary { list-style: none; }
   details > summary::-webkit-details-marker { display: none; }
   details[open] .chev { transform: rotate(180deg); }
+
+  /* ── Modal enter/exit — same pattern as the real quote modal in globals.css ── */
+  .modal-backdrop { opacity: 0; transition: opacity .18s ease; }
+  .modal-backdrop.is-shown { opacity: 1; }
+  .modal-panel { opacity: 0; transform: translateY(24px) scale(.98); transition: opacity .2s ease-out, transform .2s ease-out; }
+  .modal-panel.is-shown { opacity: 1; transform: none; }
 </style>
 </head>
-<body class="bg-white text-fg antialiased">
+<body class="bg-paper text-fg antialiased">
 
   <!-- ============ HEADER ============ -->
-  <header class="sticky top-0 z-40 border-b border-line bg-white/90 backdrop-blur">
+  <header class="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur">
     <div class="container-page flex h-16 items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="flex h-8 w-8 items-center justify-center rounded-full bg-fg text-white">
@@ -58,9 +69,9 @@
       </div>
 
       <nav class="hidden items-center gap-7 text-[13.5px] font-medium text-fg/80 lg:flex">
-        <a href="#freight" class="hover:text-fg">Грузоперевозки</a>
-        <a href="#contracts" class="hover:text-fg">Долгосрочные контракты</a>
-        <a href="#office" class="hover:text-fg">Офисные переезды</a>
+        <a href="#services" class="hover:text-fg">Грузоперевозки</a>
+        <a href="#services" class="hover:text-fg">Долгосрочные контракты</a>
+        <a href="#services" class="hover:text-fg">Офисные переезды</a>
         <a href="#faq" class="hover:text-fg">Вопросы</a>
       </nav>
 
@@ -70,23 +81,23 @@
           <a href="#" class="rounded-full px-3 py-1.5 text-muted hover:text-fg">Частным лицам</a>
           <span class="rounded-full bg-fg px-3 py-1.5 text-white">Бизнесу</span>
         </div>
-        <a href="#quote" class="hidden rounded-full bg-accent px-4 py-2 text-[13.5px] font-semibold text-navy transition-colors hover:bg-accent-dark sm:inline-block">Запросить расчёт</a>
+        <a href="#quote" class="hidden rounded-full bg-accent px-4 py-2 text-[13.5px] font-semibold text-ink transition-colors hover:brightness-95 sm:inline-block">Запросить расчёт</a>
       </div>
     </div>
   </header>
 
   <!-- ============ HERO (signature: карта Европы с грузовиками на маршрутах) ============ -->
-  <section class="relative overflow-hidden bg-navy text-white">
+  <section class="relative overflow-hidden bg-night text-white">
     <!-- stylised Europe map graphic (schematic, not cartographically precise) -->
     <svg class="pointer-events-none absolute inset-0 h-full w-full opacity-95" viewBox="0 0 1180 560" fill="none" preserveAspectRatio="xMidYMid slice">
       <defs>
         <linearGradient id="landGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#1B3055"/>
-          <stop offset="100%" stop-color="#1B3055"/>
+          <stop offset="0%" stop-color="#15203A"/>
+          <stop offset="100%" stop-color="#0E1726"/>
         </linearGradient>
         <radialGradient id="heroGlow" cx="50%" cy="35%" r="75%">
-          <stop offset="0%" stop-color="#1B3055" stop-opacity="0.55"/>
-          <stop offset="100%" stop-color="#011842" stop-opacity="0"/>
+          <stop offset="0%" stop-color="#15203A" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#0E1726" stop-opacity="0"/>
         </radialGradient>
         <filter id="routeGlow" x="-60%" y="-60%" width="220%" height="220%">
           <feGaussianBlur in="SourceGraphic" stdDeviation="4.2" result="blur"/>
@@ -108,7 +119,7 @@
       <rect x="0" y="0" width="1180" height="560" fill="url(#heroGlow)"/>
 
       <!-- continental landmass (stylised silhouette) -->
-      <path fill="url(#landGrad)" stroke="#2E4A78" stroke-width="1"
+      <path fill="url(#landGrad)" stroke="#232F46" stroke-width="1"
         d="M300,260 L330,228 L378,212 L420,190 L470,172 L500,118 L540,150
            L602,108 L652,40 L700,30 L760,62 L742,140 L782,160 L852,182
            L952,222 L1052,262 L1100,340 L1080,420 L1000,460 L922,480
@@ -116,92 +127,92 @@
            L560,500 L522,432 L482,380 L440,362 L382,380 L322,402 L262,440
            L182,460 L102,430 L70,380 L90,320 L150,290 L222,280 Z"/>
       <!-- British Isles -->
-      <path fill="url(#landGrad)" stroke="#2E4A78" stroke-width="1"
+      <path fill="url(#landGrad)" stroke="#232F46" stroke-width="1"
         d="M120,170 L152,150 L178,168 L172,204 L140,222 L112,204 Z"/>
-      <path fill="url(#landGrad)" stroke="#2E4A78" stroke-width="1"
+      <path fill="url(#landGrad)" stroke="#232F46" stroke-width="1"
         d="M96,236 L118,226 L124,252 L102,262 Z"/>
 
       <!-- latitude/longitude grid, subtle -->
-      <g stroke="#233A63" stroke-width="0.6" opacity="0.5">
+      <g stroke="#232F46" stroke-width="0.6" opacity="0.5">
         <path d="M0,140 H1180"/><path d="M0,280 H1180"/><path d="M0,420 H1180"/>
         <path d="M260,0 V560"/><path d="M540,0 V560"/><path d="M820,0 V560"/>
       </g>
 
       <!-- routes -->
-      <path id="routeA" d="M182,450 C 260,380 300,340 350,300 S 440,220 480,190" fill="none" filter="url(#routeGlow)" stroke="#E8B84B" stroke-width="2" stroke-opacity="0.55"/>
-      <path d="M182,450 C 260,380 300,340 350,300 S 440,220 480,190" fill="none" class="route-line" stroke="#F6E2AC" stroke-width="1.3"/>
-      <path id="routeB" d="M480,190 C 560,220 600,240 620,270 S 740,230 820,220" fill="none" filter="url(#routeGlow)" stroke="#E8B84B" stroke-width="2" stroke-opacity="0.55"/>
-      <path d="M480,190 C 560,220 600,240 620,270 S 740,230 820,220" fill="none" class="route-line" stroke="#F6E2AC" stroke-width="1.3"/>
-      <path id="routeC" d="M350,300 C 420,360 480,410 560,460" fill="none" filter="url(#routeGlow)" stroke="#E8B84B" stroke-width="2" stroke-opacity="0.55"/>
-      <path d="M350,300 C 420,360 480,410 560,460" fill="none" class="route-line" stroke="#F6E2AC" stroke-width="1.3"/>
+      <path id="routeA" d="M182,450 C 260,380 300,340 350,300 S 440,220 480,190" fill="none" filter="url(#routeGlow)" stroke="#E8BE4E" stroke-width="2" stroke-opacity="0.55"/>
+      <path d="M182,450 C 260,380 300,340 350,300 S 440,220 480,190" fill="none" class="route-line" stroke="#F5DFA6" stroke-width="1.3"/>
+      <path id="routeB" d="M480,190 C 560,220 600,240 620,270 S 740,230 820,220" fill="none" filter="url(#routeGlow)" stroke="#E8BE4E" stroke-width="2" stroke-opacity="0.55"/>
+      <path d="M480,190 C 560,220 600,240 620,270 S 740,230 820,220" fill="none" class="route-line" stroke="#F5DFA6" stroke-width="1.3"/>
+      <path id="routeC" d="M350,300 C 420,360 480,410 560,460" fill="none" filter="url(#routeGlow)" stroke="#E8BE4E" stroke-width="2" stroke-opacity="0.55"/>
+      <path d="M350,300 C 420,360 480,410 560,460" fill="none" class="route-line" stroke="#F5DFA6" stroke-width="1.3"/>
 
       <!-- city markers -->
-      <g filter="url(#dotGlow)"><circle cx="182" cy="450" r="4" fill="#E8B84B"/></g>
-      <g filter="url(#dotGlow)"><circle cx="350" cy="300" r="4" fill="#E8B84B"/></g>
-      <g filter="url(#dotGlow)"><circle cx="480" cy="190" r="4" fill="#E8B84B"/></g>
-      <g filter="url(#dotGlow)"><circle cx="820" cy="220" r="4" fill="#E8B84B"/></g>
-      <g filter="url(#dotGlow)"><circle cx="560" cy="460" r="4" fill="#E8B84B"/></g>
-      <g class="route-dot"><circle cx="620" cy="270" r="3.4" fill="#8FA3B5"/></g>
+      <g filter="url(#dotGlow)"><circle cx="182" cy="450" r="4" fill="#E8BE4E"/></g>
+      <g filter="url(#dotGlow)"><circle cx="350" cy="300" r="4" fill="#E8BE4E"/></g>
+      <g filter="url(#dotGlow)"><circle cx="480" cy="190" r="4" fill="#E8BE4E"/></g>
+      <g filter="url(#dotGlow)"><circle cx="820" cy="220" r="4" fill="#E8BE4E"/></g>
+      <g filter="url(#dotGlow)"><circle cx="560" cy="460" r="4" fill="#E8BE4E"/></g>
+      <g class="route-dot"><circle cx="620" cy="270" r="3.4" fill="#8DA0BD"/></g>
 
-      <text x="164" y="474" fill="#9FB0BF" font-size="11" font-family="Inter">Мадрид</text>
-      <text x="330" y="322" fill="#9FB0BF" font-size="11" font-family="Inter">Париж</text>
-      <text x="490" y="176" fill="#9FB0BF" font-size="11" font-family="Inter">Берлин</text>
-      <text x="830" y="206" fill="#9FB0BF" font-size="11" font-family="Inter">Варшава</text>
-      <text x="536" y="486" fill="#9FB0BF" font-size="11" font-family="Inter">Рим</text>
-      <text x="632" y="292" fill="#7E90A1" font-size="10" font-family="Inter">Вена</text>
+      <text x="164" y="474" fill="#8DA0BD" font-size="11" font-family="Inter">Мадрид</text>
+      <text x="330" y="322" fill="#8DA0BD" font-size="11" font-family="Inter">Париж</text>
+      <text x="490" y="176" fill="#8DA0BD" font-size="11" font-family="Inter">Берлин</text>
+      <text x="830" y="206" fill="#8DA0BD" font-size="11" font-family="Inter">Варшава</text>
+      <text x="536" y="486" fill="#8DA0BD" font-size="11" font-family="Inter">Рим</text>
+      <text x="632" y="292" fill="#8DA0BD" opacity="0.8" font-size="10" font-family="Inter">Вена</text>
 
       <!-- animated trucks travelling along the routes, with glow -->
       <g filter="url(#dotGlow)">
-        <g fill="#E8B84B">
+        <g fill="#E8BE4E">
           <rect x="-7" y="-3.5" width="10" height="7" rx="1.2"/>
           <rect x="3" y="-5" width="5.5" height="8.5" rx="1"/>
-          <circle cx="-4" cy="4" r="1.6" fill="#011842"/>
-          <circle cx="5.5" cy="4" r="1.6" fill="#011842"/>
+          <circle cx="-4" cy="4" r="1.6" fill="#0E1726"/>
+          <circle cx="5.5" cy="4" r="1.6" fill="#0E1726"/>
           <animateMotion dur="6s" begin="0s" repeatCount="indefinite" rotate="auto">
             <mpath href="#routeA"/>
           </animateMotion>
         </g>
       </g>
       <g filter="url(#dotGlow)">
-        <g fill="#E8B84B" opacity="0.92">
+        <g fill="#E8BE4E" opacity="0.92">
           <rect x="-7" y="-3.5" width="10" height="7" rx="1.2"/>
           <rect x="3" y="-5" width="5.5" height="8.5" rx="1"/>
-          <circle cx="-4" cy="4" r="1.6" fill="#011842"/>
-          <circle cx="5.5" cy="4" r="1.6" fill="#011842"/>
+          <circle cx="-4" cy="4" r="1.6" fill="#0E1726"/>
+          <circle cx="5.5" cy="4" r="1.6" fill="#0E1726"/>
           <animateMotion dur="7s" begin="1.2s" repeatCount="indefinite" rotate="auto">
             <mpath href="#routeB"/>
           </animateMotion>
         </g>
       </g>
       <g filter="url(#dotGlow)">
-        <g fill="#E8B84B" opacity="0.88">
+        <g fill="#E8BE4E" opacity="0.88">
           <rect x="-7" y="-3.5" width="10" height="7" rx="1.2"/>
           <rect x="3" y="-5" width="5.5" height="8.5" rx="1"/>
-          <circle cx="-4" cy="4" r="1.6" fill="#011842"/>
-          <circle cx="5.5" cy="4" r="1.6" fill="#011842"/>
+          <circle cx="-4" cy="4" r="1.6" fill="#0E1726"/>
+          <circle cx="5.5" cy="4" r="1.6" fill="#0E1726"/>
           <animateMotion dur="5.5s" begin="2.4s" repeatCount="indefinite" rotate="auto">
             <mpath href="#routeC"/>
           </animateMotion>
         </g>
       </g>
     </svg>
-    <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-navy via-navy/60 to-navy/10"></div>
-    <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-navy/95 via-navy/40 to-transparent"></div>
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-night via-night/60 to-night/10"></div>
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-night/95 via-night/40 to-transparent"></div>
 
     <div class="container-page relative py-20 sm:py-28">
       <div class="max-w-2xl">
         <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[12px] font-medium text-accent">
           <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>Логистика для бизнеса
         </span>
-        <h1 class="mt-5 text-[2.3rem] font-extrabold leading-[1.12] tracking-tight sm:text-[3rem]">
+        <h1 class="font-display mt-5 text-[2.3rem] font-extrabold leading-[1.12] tracking-tight sm:text-[3rem]">
           Регулярные грузоперевозки и&nbsp;долгосрочные контракты по&nbsp;Европе
         </h1>
         <p class="mt-5 max-w-xl text-[16.5px] leading-relaxed text-white/70">
           Товары, комплектующие и сырьё — между 28 странами ЕС. Фиксированные ставки при контракте, страхование груза и персональный координатор на всё время сотрудничества.
         </p>
         <div class="mt-8 flex flex-wrap items-center gap-3">
-          <a href="#quote" class="rounded-full bg-accent px-6 py-3 text-[14.5px] font-semibold text-navy transition-colors hover:bg-accent-dark">Запросить расчёт</a>
-          <a href="#contracts" class="rounded-full border border-white/20 px-6 py-3 text-[14.5px] font-semibold text-white/90 transition-colors hover:border-white/40 hover:bg-white/5">Обсудить контракт</a>
+          <a href="#quote" class="rounded-full bg-accent px-6 py-3 text-[14.5px] font-semibold text-ink transition-colors hover:brightness-95">Запросить расчёт</a>
+          <button type="button" onclick="openServiceModal('contracts')" class="rounded-full border border-white/20 px-6 py-3 text-[14.5px] font-semibold text-white/90 transition-colors hover:border-white/40 hover:bg-white/5">Обсудить контракт</button>
         </div>
       </div>
     </div>
@@ -218,75 +229,75 @@
   </section>
 
   <!-- ============ SERVICES ============ -->
-  <section class="py-20">
+  <section id="services" class="py-20">
     <div class="container-page">
       <div class="mb-10 max-w-xl">
-        <div class="text-[12.5px] font-semibold uppercase tracking-wide text-accent-dark">Услуги для бизнеса</div>
-        <h2 class="mt-2 text-[1.7rem] font-bold tracking-tight sm:text-[2rem]">Что мы возим и как оформляем сотрудничество</h2>
+        <div class="text-[12.5px] font-semibold uppercase tracking-wide text-accent-ink">Услуги для бизнеса</div>
+        <h2 class="font-display mt-2 text-[1.7rem] font-bold tracking-tight sm:text-[2rem]">Что мы возим и как оформляем сотрудничество</h2>
       </div>
 
       <div class="grid gap-5 lg:grid-cols-3">
         <!-- card 1 — main -->
-        <a id="freight" href="#freight" class="card-hover group flex flex-col rounded-2xl border border-line p-7">
-          <div class="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 text-accent-dark">
+        <button type="button" onclick="openServiceModal('freight')" class="card-hover group flex w-full flex-col rounded-3xl border border-line p-7 text-left">
+          <div class="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 text-accent-ink">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M3 16V6.5A1.5 1.5 0 0 1 4.5 5H13a1.5 1.5 0 0 1 1.5 1.5V16M3 16h11.5M3 16H1.5M14.5 16h3.7M14.5 16V9h3l3 3.6V16h-1.2M14.5 9h-.01M20.5 16a2 2 0 1 1-4 0m4 0a2 2 0 1 0-4 0M9 16a2 2 0 1 1-4 0m4 0a2 2 0 1 0-4 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <span class="mt-5 inline-flex w-fit items-center rounded-full border border-accent/25 bg-accent/10 px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-accent-dark">Основное</span>
-          <h3 class="mt-3 text-[17px] font-semibold">Регулярные грузоперевозки</h3>
+          <span class="mt-5 inline-flex w-fit items-center rounded-full border border-accent/25 bg-accent/10 px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-accent-ink">Основное</span>
+          <h3 class="font-display mt-3 text-[17px] font-semibold">Регулярные грузоперевозки</h3>
           <p class="mt-2 text-[14px] leading-relaxed text-muted">Товары, комплектующие, сырьё. Генеральный груз, паллеты и сборные отправки по всей Европе.</p>
           <span class="mt-5 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-fg">Подробнее <svg class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </a>
+        </button>
 
         <!-- card 2 — main -->
-        <a id="contracts" href="#contracts" class="card-hover group flex flex-col rounded-2xl border border-line p-7">
-          <div class="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 text-accent-dark">
+        <button type="button" onclick="openServiceModal('contracts')" class="card-hover group flex w-full flex-col rounded-3xl border border-line p-7 text-left">
+          <div class="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 text-accent-ink">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M9 12.5l2 2 4-4.5M6.5 4h11A2.5 2.5 0 0 1 20 6.5v13L16.5 17l-2 2-2-2-2 2-2-2L5 19.5v-13A2.5 2.5 0 0 1 6.5 4z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <span class="mt-5 inline-flex w-fit items-center rounded-full border border-accent/25 bg-accent/10 px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-accent-dark">Основное</span>
-          <h3 class="mt-3 text-[17px] font-semibold">Долгосрочные контракты</h3>
+          <span class="mt-5 inline-flex w-fit items-center rounded-full border border-accent/25 bg-accent/10 px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-accent-ink">Основное</span>
+          <h3 class="font-display mt-3 text-[17px] font-semibold">Долгосрочные контракты</h3>
           <p class="mt-2 text-[14px] leading-relaxed text-muted">Фиксированные ставки, выделенные объёмы и приоритетная логистика для регулярных отправок.</p>
           <span class="mt-5 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-fg">Подробнее <svg class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </a>
+        </button>
 
         <!-- card 3 — feature, de-emphasized -->
-        <a id="office" href="#office" class="card-hover group flex flex-col rounded-2xl border border-line bg-fg/[0.015] p-7">
+        <button type="button" onclick="openServiceModal('office')" class="card-hover group flex w-full flex-col rounded-3xl border border-line bg-surface2 p-7 text-left">
           <div class="flex h-11 w-11 items-center justify-center rounded-full bg-fg/[0.06] text-muted">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M4 21V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v16M4 21h16M4 21h-1M13 21V10a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v11M20 21h1M7 8h1M7 12h1M7 16h1M10 8h1M10 12h1M10 16h1M16 13h1M16 17h1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
           </div>
           <span class="mt-5 inline-flex w-fit items-center rounded-full border border-line bg-white px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-muted">Доп. услуга</span>
-          <h3 class="mt-3 text-[17px] font-semibold text-fg/90">Офисные и корпоративные переезды</h3>
+          <h3 class="font-display mt-3 text-[17px] font-semibold text-fg/90">Офисные и корпоративные переезды</h3>
           <p class="mt-2 text-[14px] leading-relaxed text-muted">Демонтаж и монтаж мебели, минимальный простой офиса, переезд в выходные.</p>
           <span class="mt-5 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-fg/70">Подробнее <svg class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </a>
+        </button>
       </div>
     </div>
   </section>
 
   <!-- ============ HOW IT WORKS ============ -->
-  <section class="border-t border-line bg-fg/[0.015] py-20">
+  <section class="border-t border-line bg-surface2 py-20">
     <div class="container-page">
       <div class="mb-12 max-w-xl">
-        <div class="text-[12.5px] font-semibold uppercase tracking-wide text-accent-dark">Как это устроено</div>
-        <h2 class="mt-2 text-[1.7rem] font-bold tracking-tight sm:text-[2rem]">От заявки до регулярных рейсов</h2>
+        <div class="text-[12.5px] font-semibold uppercase tracking-wide text-accent-ink">Как это устроено</div>
+        <h2 class="font-display mt-2 text-[1.7rem] font-bold tracking-tight sm:text-[2rem]">От заявки до регулярных рейсов</h2>
       </div>
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <div class="relative pl-1">
-          <div class="text-[13px] font-mono text-accent-dark">01</div>
+          <div class="text-[13px] font-mono text-accent-ink">01</div>
           <h3 class="mt-2 text-[15px] font-semibold">Заявка</h3>
           <p class="mt-1.5 text-[13.5px] leading-relaxed text-muted">Расскажите об объёмах, типе груза и желаемой периодичности перевозок.</p>
         </div>
         <div class="relative pl-1">
-          <div class="text-[13px] font-mono text-accent-dark">02</div>
+          <div class="text-[13px] font-mono text-accent-ink">02</div>
           <h3 class="mt-2 text-[15px] font-semibold">Расчёт и договор</h3>
           <p class="mt-1.5 text-[13.5px] leading-relaxed text-muted">Фиксируем ставки и условия — разово или в рамках долгосрочного контракта.</p>
         </div>
         <div class="relative pl-1">
-          <div class="text-[13px] font-mono text-accent-dark">03</div>
+          <div class="text-[13px] font-mono text-accent-ink">03</div>
           <h3 class="mt-2 text-[15px] font-semibold">Логистика</h3>
           <p class="mt-1.5 text-[13.5px] leading-relaxed text-muted">Планируем маршрут, страхуем груз, назначаем персонального координатора.</p>
         </div>
         <div class="relative pl-1">
-          <div class="text-[13px] font-mono text-accent-dark">04</div>
+          <div class="text-[13px] font-mono text-accent-ink">04</div>
           <h3 class="mt-2 text-[15px] font-semibold">Регулярные рейсы</h3>
           <p class="mt-1.5 text-[13.5px] leading-relaxed text-muted">Отслеживайте груз в реальном времени на каждой отправке.</p>
         </div>
@@ -298,27 +309,27 @@
   <section class="py-20">
     <div class="container-page">
       <div class="mb-10 max-w-xl">
-        <div class="text-[12.5px] font-semibold uppercase tracking-wide text-accent-dark">Почему мы</div>
-        <h2 class="mt-2 text-[1.7rem] font-bold tracking-tight sm:text-[2rem]">Надёжность, на которую можно планировать</h2>
+        <div class="text-[12.5px] font-semibold uppercase tracking-wide text-accent-ink">Почему мы</div>
+        <h2 class="font-display mt-2 text-[1.7rem] font-bold tracking-tight sm:text-[2rem]">Надёжность, на которую можно планировать</h2>
       </div>
       <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <div class="rounded-2xl border border-line p-6">
-          <svg class="h-5 w-5 text-accent-dark" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke="currentColor" stroke-width="1.6"/></svg>
+        <div class="rounded-3xl border border-line p-6">
+          <svg class="h-5 w-5 text-accent-ink" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" stroke="currentColor" stroke-width="1.6"/></svg>
           <h3 class="mt-3 text-[14.5px] font-semibold">Страхование груза</h3>
           <p class="mt-1.5 text-[13px] leading-relaxed text-muted">Полное покрытие на каждую перевозку, без исключений мелким шрифтом.</p>
         </div>
-        <div class="rounded-2xl border border-line p-6">
-          <svg class="h-5 w-5 text-accent-dark" viewBox="0 0 24 24" fill="none"><path d="M9 12.5l2 2 4-4.5M6.5 4h11A2.5 2.5 0 0 1 20 6.5v13L16.5 17l-2 2-2-2-2 2-2-2L5 19.5v-13A2.5 2.5 0 0 1 6.5 4z" stroke="currentColor" stroke-width="1.6"/></svg>
+        <div class="rounded-3xl border border-line p-6">
+          <svg class="h-5 w-5 text-accent-ink" viewBox="0 0 24 24" fill="none"><path d="M9 12.5l2 2 4-4.5M6.5 4h11A2.5 2.5 0 0 1 20 6.5v13L16.5 17l-2 2-2-2-2 2-2-2L5 19.5v-13A2.5 2.5 0 0 1 6.5 4z" stroke="currentColor" stroke-width="1.6"/></svg>
           <h3 class="mt-3 text-[14.5px] font-semibold">Фиксированные ставки</h3>
           <p class="mt-1.5 text-[13px] leading-relaxed text-muted">При контракте цена не меняется от отправки к отправке.</p>
         </div>
-        <div class="rounded-2xl border border-line p-6">
-          <svg class="h-5 w-5 text-accent-dark" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <div class="rounded-3xl border border-line p-6">
+          <svg class="h-5 w-5 text-accent-ink" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
           <h3 class="mt-3 text-[14.5px] font-semibold">GPS-трекинг</h3>
           <p class="mt-1.5 text-[13px] leading-relaxed text-muted">Видите местоположение груза на каждом этапе маршрута.</p>
         </div>
-        <div class="rounded-2xl border border-line p-6">
-          <svg class="h-5 w-5 text-accent-dark" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <div class="rounded-3xl border border-line p-6">
+          <svg class="h-5 w-5 text-accent-ink" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
           <h3 class="mt-3 text-[14.5px] font-semibold">Персональный координатор</h3>
           <p class="mt-1.5 text-[13px] leading-relaxed text-muted">Один контакт на всё сотрудничество — без переключения между менеджерами.</p>
         </div>
@@ -327,10 +338,10 @@
   </section>
 
   <!-- ============ FOR WHOM ============ -->
-  <section class="border-t border-line bg-fg/[0.015] py-16">
+  <section class="border-t border-line bg-surface2 py-16">
     <div class="container-page">
       <div class="flex flex-wrap items-center justify-between gap-4">
-        <h2 class="text-[15px] font-semibold text-muted">Работаем с компаниями из индустрий с регулярным грузопотоком:</h2>
+        <h2 class="font-display text-[15px] font-semibold text-muted">Работаем с компаниями из индустрий с регулярным грузопотоком:</h2>
         <div class="flex flex-wrap gap-2.5">
           <span class="rounded-full border border-line bg-white px-3.5 py-1.5 text-[13px] font-medium">Производство</span>
           <span class="rounded-full border border-line bg-white px-3.5 py-1.5 text-[13px] font-medium">Дистрибуция и опт</span>
@@ -345,8 +356,8 @@
   <section id="faq" class="py-20">
     <div class="container-page max-w-2xl">
       <div class="mb-8">
-        <div class="text-[12.5px] font-semibold uppercase tracking-wide text-accent-dark">Вопросы</div>
-        <h2 class="mt-2 text-[1.7rem] font-bold tracking-tight sm:text-[2rem]">Частые вопросы от бизнеса</h2>
+        <div class="text-[12.5px] font-semibold uppercase tracking-wide text-accent-ink">Вопросы</div>
+        <h2 class="font-display mt-2 text-[1.7rem] font-bold tracking-tight sm:text-[2rem]">Частые вопросы от бизнеса</h2>
       </div>
       <div class="divide-y divide-line border-t border-line">
         <details class="group py-5">
@@ -375,11 +386,11 @@
   </section>
 
   <!-- ============ FINAL CTA ============ -->
-  <section id="quote" class="relative overflow-hidden bg-navy py-20 text-white">
+  <section id="quote" class="relative overflow-hidden bg-night py-20 text-white">
     <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-accent/10 blur-3xl"></div>
     <div class="container-page relative grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-center">
       <div>
-        <h2 class="text-[1.9rem] font-extrabold leading-tight tracking-tight sm:text-[2.3rem]">
+        <h2 class="font-display text-[1.9rem] font-extrabold leading-tight tracking-tight sm:text-[2.3rem]">
           Любое сотрудничество<br /><span class="text-white/50">начинается с расчёта.</span>
         </h2>
         <p class="mt-4 max-w-md text-[15px] leading-relaxed text-white/65">Разовая перевозка, регулярный поток грузов или контракт на объём — ответим в течение рабочего дня.</p>
@@ -391,7 +402,7 @@
           <input class="rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-[14px] text-white placeholder:text-white/40 outline-none focus:border-accent" placeholder="Объём и частота" />
           <input class="rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-[14px] text-white placeholder:text-white/40 outline-none focus:border-accent" placeholder="Email" />
         </div>
-        <button class="mt-4 w-full rounded-full bg-accent px-6 py-3 text-[14.5px] font-semibold text-navy transition-colors hover:bg-accent-dark">Запросить расчёт</button>
+        <button class="mt-4 w-full rounded-full bg-accent px-6 py-3 text-[14.5px] font-semibold text-ink transition-colors hover:brightness-95">Запросить расчёт</button>
       </form>
     </div>
   </section>
@@ -407,6 +418,130 @@
       </div>
     </div>
   </footer>
+
+  <!-- ============ SERVICE MODAL ============ -->
+  <div id="serviceModalBackdrop" class="modal-backdrop pointer-events-none fixed inset-0 z-50 hidden items-center justify-center bg-ink/50 p-4 backdrop-blur-sm" onclick="if(event.target===this) closeServiceModal()">
+    <div id="serviceModalPanel" class="modal-panel max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-line bg-white p-8 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="serviceModalTitle">
+      <div class="flex items-start justify-between gap-4">
+        <div id="serviceModalIcon" class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent-ink"></div>
+        <button type="button" onclick="closeServiceModal()" aria-label="Закрыть" class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-fg/5 hover:text-fg">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <span id="serviceModalBadge" class="mt-5 inline-flex w-fit items-center rounded-full px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide"></span>
+      <h3 id="serviceModalTitle" class="font-display mt-3 text-[22px] font-semibold leading-tight"></h3>
+      <p id="serviceModalDescription" class="mt-3 text-[14.5px] leading-relaxed text-muted"></p>
+
+      <ul id="serviceModalPoints" class="mt-5 space-y-2.5"></ul>
+
+      <div class="mt-7 flex flex-col gap-2.5 border-t border-line pt-6 sm:flex-row">
+        <a href="#quote" onclick="closeServiceModal()" class="inline-flex flex-1 items-center justify-center rounded-full bg-accent px-6 py-3 text-[14.5px] font-semibold text-ink transition-colors hover:brightness-95">Получить расчёт</a>
+        <button type="button" onclick="closeServiceModal()" class="inline-flex items-center justify-center rounded-full border border-line px-6 py-3 text-[14.5px] font-semibold text-fg/80 transition-colors hover:bg-fg/5">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SERVICE_ICONS = {
+      freight: '<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M3 16V6.5A1.5 1.5 0 0 1 4.5 5H13a1.5 1.5 0 0 1 1.5 1.5V16M3 16h11.5M3 16H1.5M14.5 16h3.7M14.5 16V9h3l3 3.6V16h-1.2M14.5 9h-.01M20.5 16a2 2 0 1 1-4 0m4 0a2 2 0 1 0-4 0M9 16a2 2 0 1 1-4 0m4 0a2 2 0 1 0-4 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      contracts: '<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M9 12.5l2 2 4-4.5M6.5 4h11A2.5 2.5 0 0 1 20 6.5v13L16.5 17l-2 2-2-2-2 2-2-2L5 19.5v-13A2.5 2.5 0 0 1 6.5 4z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      office: '<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M4 21V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v16M4 21h16M4 21h-1M13 21V10a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v11M20 21h1M7 8h1M7 12h1M7 16h1M10 8h1M10 12h1M10 16h1M16 13h1M16 17h1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    };
+
+    const SERVICES = {
+      freight: {
+        badge: 'Основное',
+        badgeClass: 'border border-accent/25 bg-accent/10 text-accent-ink',
+        iconClass: 'bg-accent/10 text-accent-ink',
+        title: 'Регулярные грузоперевозки',
+        description: 'Перевозим товары, комплектующие и сырьё между 28 странами ЕС — от одной паллеты до полной загрузки, разово или на регулярной основе.',
+        points: [
+          'Генеральный груз, паллеты и сборные отправки (LTL)',
+          'Полное страхование груза на каждую перевозку',
+          'GPS-трекинг в реальном времени на всём маршруте',
+          'Персональный координатор на всё время сотрудничества',
+        ],
+      },
+      contracts: {
+        badge: 'Основное',
+        badgeClass: 'border border-accent/25 bg-accent/10 text-accent-ink',
+        iconClass: 'bg-accent/10 text-accent-ink',
+        title: 'Долгосрочные контракты',
+        description: 'Для компаний с регулярным грузопотоком — фиксируем ставки и выделяем приоритетные мощности на весь срок сотрудничества, без пересогласования условий на каждую отправку.',
+        points: [
+          'Фиксированные ставки на весь срок контракта',
+          'Приоритетная логистика и выделенный транспорт',
+          'Пилотный период перед подписанием долгосрочных условий',
+          'Один аккаунт-менеджер на всё сотрудничество',
+        ],
+      },
+      office: {
+        badge: 'Доп. услуга',
+        badgeClass: 'border border-line bg-surface2 text-muted',
+        iconClass: 'bg-fg/[0.06] text-muted',
+        title: 'Офисные и корпоративные переезды',
+        description: 'Переезд офиса или переговорной без остановки работы компании — демонтаж, перевозка и сборка на новом месте, включая IT-оборудование.',
+        points: [
+          'Демонтаж и монтаж мебели силами нашей команды',
+          'Переезд в выходные — минимальный простой офиса',
+          'Бережная перевозка IT-оборудования и серверов',
+          'Регулярно возите грузы между офисами? Это уже относится к разделу «Грузоперевозки» — расскажите нам об объёме.',
+        ],
+      },
+    };
+
+    const backdropEl = document.getElementById('serviceModalBackdrop');
+    const panelEl = document.getElementById('serviceModalPanel');
+    let lastFocusedEl = null;
+
+    function openServiceModal(key) {
+      const data = SERVICES[key];
+      if (!data) return;
+
+      document.getElementById('serviceModalIcon').className =
+        'flex h-12 w-12 shrink-0 items-center justify-center rounded-full ' + data.iconClass;
+      document.getElementById('serviceModalIcon').innerHTML = SERVICE_ICONS[key];
+
+      const badgeEl = document.getElementById('serviceModalBadge');
+      badgeEl.textContent = data.badge;
+      badgeEl.className = 'mt-5 inline-flex w-fit items-center rounded-full px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide ' + data.badgeClass;
+
+      document.getElementById('serviceModalTitle').textContent = data.title;
+      document.getElementById('serviceModalDescription').textContent = data.description;
+
+      const pointsEl = document.getElementById('serviceModalPoints');
+      pointsEl.innerHTML = data.points.map(function (p) {
+        return '<li class="flex items-start gap-2.5 text-[13.5px] leading-relaxed text-fg/85">' +
+          '<svg class="mt-0.5 h-4 w-4 shrink-0 text-accent-ink" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+          '<span>' + p + '</span></li>';
+      }).join('');
+
+      lastFocusedEl = document.activeElement;
+      backdropEl.classList.remove('hidden', 'pointer-events-none');
+      backdropEl.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(function () {
+        backdropEl.classList.add('is-shown');
+        panelEl.classList.add('is-shown');
+      });
+    }
+
+    function closeServiceModal() {
+      backdropEl.classList.remove('is-shown');
+      panelEl.classList.remove('is-shown');
+      document.body.style.overflow = '';
+      setTimeout(function () {
+        backdropEl.classList.add('hidden', 'pointer-events-none');
+        backdropEl.classList.remove('flex');
+        if (lastFocusedEl) lastFocusedEl.focus();
+      }, 200);
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && backdropEl.classList.contains('is-shown')) closeServiceModal();
+    });
+  </script>
 
 </body>
 </html>
