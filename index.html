@@ -42,6 +42,19 @@
   @media (prefers-reduced-motion: reduce) { .route-line { animation: none; } }
   .card-hover { transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
   .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 24px -12px rgba(18,22,28,0.12); }
+  /* ── Selectable cities on the hero map ── */
+  .city { pointer-events: auto; cursor: pointer; outline: none; }
+  .city-hit { fill: transparent; }
+  .city-dot { fill: #8DA0BD; transition: fill .15s ease; }
+  .city-ring { fill: none; stroke: #E8BE4E; stroke-width: 1.4; opacity: 0; transition: opacity .15s ease; }
+  .city-label { fill: #8DA0BD; font-size: 11px; font-family: Inter, sans-serif; transition: fill .15s ease; }
+  .city:hover .city-dot, .city:focus-visible .city-dot { fill: #F5DFA6; }
+  .city:hover .city-label, .city:focus-visible .city-label { fill: #fff; }
+  .city:focus-visible .city-ring { opacity: .5; }
+  .city.is-selected .city-dot { fill: #E8BE4E; }
+  .city.is-selected .city-ring { opacity: 1; }
+  .city.is-selected .city-label { fill: #E8BE4E; font-weight: 600; }
+  .city-chip[aria-pressed="true"] { border-color: #E8BE4E; background: rgba(232,190,78,.15); color: #E8BE4E; }
   details > summary { list-style: none; }
   details > summary::-webkit-details-marker { display: none; }
   details[open] .chev { transform: rotate(180deg); }
@@ -146,20 +159,45 @@
       <path id="routeC" d="M350,300 C 420,360 480,410 560,460" fill="none" filter="url(#routeGlow)" stroke="#E8BE4E" stroke-width="2" stroke-opacity="0.55"/>
       <path d="M350,300 C 420,360 480,410 560,460" fill="none" class="route-line" stroke="#F5DFA6" stroke-width="1.3"/>
 
-      <!-- city markers -->
-      <g filter="url(#dotGlow)"><circle cx="182" cy="450" r="4" fill="#E8BE4E"/></g>
-      <g filter="url(#dotGlow)"><circle cx="350" cy="300" r="4" fill="#E8BE4E"/></g>
-      <g filter="url(#dotGlow)"><circle cx="480" cy="190" r="4" fill="#E8BE4E"/></g>
-      <g filter="url(#dotGlow)"><circle cx="820" cy="220" r="4" fill="#E8BE4E"/></g>
-      <g filter="url(#dotGlow)"><circle cx="560" cy="460" r="4" fill="#E8BE4E"/></g>
-      <g class="route-dot"><circle cx="620" cy="270" r="3.4" fill="#8DA0BD"/></g>
-
-      <text x="164" y="474" fill="#8DA0BD" font-size="11" font-family="Inter">Мадрид</text>
-      <text x="330" y="322" fill="#8DA0BD" font-size="11" font-family="Inter">Париж</text>
-      <text x="490" y="176" fill="#8DA0BD" font-size="11" font-family="Inter">Берлин</text>
-      <text x="830" y="206" fill="#8DA0BD" font-size="11" font-family="Inter">Варшава</text>
-      <text x="536" y="486" fill="#8DA0BD" font-size="11" font-family="Inter">Рим</text>
-      <text x="632" y="292" fill="#8DA0BD" opacity="0.8" font-size="10" font-family="Inter">Вена</text>
+      <!-- city markers — each city is a separate selectable element (see CITIES script below) -->
+      <g id="cityLayer">
+        <g class="city" data-city="madrid" role="button" tabindex="0" aria-pressed="false" aria-label="Мадрид">
+          <circle class="city-hit" cx="182" cy="450" r="16"/>
+          <circle class="city-ring" cx="182" cy="450" r="9"/>
+          <g filter="url(#dotGlow)"><circle class="city-dot" cx="182" cy="450" r="4"/></g>
+          <text class="city-label" x="164" y="474">Мадрид</text>
+        </g>
+        <g class="city" data-city="paris" role="button" tabindex="0" aria-pressed="false" aria-label="Париж">
+          <circle class="city-hit" cx="350" cy="300" r="16"/>
+          <circle class="city-ring" cx="350" cy="300" r="9"/>
+          <g filter="url(#dotGlow)"><circle class="city-dot" cx="350" cy="300" r="4"/></g>
+          <text class="city-label" x="330" y="322">Париж</text>
+        </g>
+        <g class="city" data-city="berlin" role="button" tabindex="0" aria-pressed="false" aria-label="Берлин">
+          <circle class="city-hit" cx="480" cy="190" r="16"/>
+          <circle class="city-ring" cx="480" cy="190" r="9"/>
+          <g filter="url(#dotGlow)"><circle class="city-dot" cx="480" cy="190" r="4"/></g>
+          <text class="city-label" x="490" y="176">Берлин</text>
+        </g>
+        <g class="city" data-city="warsaw" role="button" tabindex="0" aria-pressed="false" aria-label="Варшава">
+          <circle class="city-hit" cx="820" cy="220" r="16"/>
+          <circle class="city-ring" cx="820" cy="220" r="9"/>
+          <g filter="url(#dotGlow)"><circle class="city-dot" cx="820" cy="220" r="4"/></g>
+          <text class="city-label" x="830" y="206">Варшава</text>
+        </g>
+        <g class="city" data-city="rome" role="button" tabindex="0" aria-pressed="false" aria-label="Рим">
+          <circle class="city-hit" cx="560" cy="460" r="16"/>
+          <circle class="city-ring" cx="560" cy="460" r="9"/>
+          <g filter="url(#dotGlow)"><circle class="city-dot" cx="560" cy="460" r="4"/></g>
+          <text class="city-label" x="536" y="486">Рим</text>
+        </g>
+        <g class="city" data-city="vienna" role="button" tabindex="0" aria-pressed="false" aria-label="Вена">
+          <circle class="city-hit" cx="620" cy="270" r="16"/>
+          <circle class="city-ring" cx="620" cy="270" r="9"/>
+          <g filter="url(#dotGlow)"><circle class="city-dot" cx="620" cy="270" r="4"/></g>
+          <text class="city-label" x="632" y="292">Вена</text>
+        </g>
+      </g>
 
       <!-- animated trucks travelling along the routes, with glow -->
       <g filter="url(#dotGlow)">
@@ -199,7 +237,7 @@
     <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-night via-night/60 to-night/10"></div>
     <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-night/95 via-night/40 to-transparent"></div>
 
-    <div class="container-page relative py-20 sm:py-28">
+    <div class="container-page pointer-events-none relative py-20 sm:py-28">
       <div class="max-w-2xl">
         <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[12px] font-medium text-accent">
           <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>Логистика для бизнеса
@@ -210,9 +248,18 @@
         <p class="mt-5 max-w-xl text-[16.5px] leading-relaxed text-white/70">
           Товары, комплектующие и сырьё — между 28 странами ЕС. Фиксированные ставки при контракте, страхование груза и персональный координатор на всё время сотрудничества.
         </p>
-        <div class="mt-8 flex flex-wrap items-center gap-3">
+        <div class="pointer-events-auto mt-8 flex w-fit flex-wrap items-center gap-3">
           <a href="#quote" class="rounded-full bg-accent px-6 py-3 text-[14.5px] font-semibold text-ink transition-colors hover:brightness-95">Запросить расчёт</a>
           <button type="button" onclick="openServiceModal('contracts')" class="rounded-full border border-white/20 px-6 py-3 text-[14.5px] font-semibold text-white/90 transition-colors hover:border-white/40 hover:bg-white/5">Обсудить контракт</button>
+        </div>
+
+        <!-- city picker: toggle each city individually (synced with the map) -->
+        <div class="pointer-events-auto mt-8 w-fit max-w-full">
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-[12.5px] font-medium text-white/60">Выберите города маршрута — на карте или здесь:</span>
+            <button type="button" id="cityClear" onclick="clearCities()" class="hidden text-[12px] font-medium text-white/50 underline-offset-2 hover:text-white hover:underline">Сбросить</button>
+          </div>
+          <div id="cityChips" class="mt-3 flex flex-wrap gap-2"></div>
         </div>
       </div>
     </div>
@@ -397,6 +444,7 @@
       </div>
       <form class="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
         <div class="grid gap-4 sm:grid-cols-2">
+          <input id="routeInput" name="route" readonly class="rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-[14px] text-white placeholder:text-white/40 outline-none focus:border-accent sm:col-span-2" placeholder="Города — выберите на карте вверху" />
           <input class="rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-[14px] text-white placeholder:text-white/40 outline-none focus:border-accent" placeholder="Компания" />
           <input class="rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-[14px] text-white placeholder:text-white/40 outline-none focus:border-accent" placeholder="Тип груза" />
           <input class="rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-[14px] text-white placeholder:text-white/40 outline-none focus:border-accent" placeholder="Объём и частота" />
@@ -540,6 +588,52 @@
 
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && backdropEl.classList.contains('is-shown')) closeServiceModal();
+    });
+
+    /* ── City picker: each city is toggled on its own; order of clicks = order in route ── */
+    const CITIES = {
+      madrid: 'Мадрид',
+      paris: 'Париж',
+      berlin: 'Берлин',
+      warsaw: 'Варшава',
+      rome: 'Рим',
+      vienna: 'Вена',
+    };
+    const selectedCities = [];
+    const chipsEl = document.getElementById('cityChips');
+
+    chipsEl.innerHTML = Object.keys(CITIES).map(function (key) {
+      return '<button type="button" class="city-chip rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-[13px] font-medium text-white/75 transition-colors hover:border-white/40" ' +
+        'data-city="' + key + '" aria-pressed="false" onclick="toggleCity(\'' + key + '\')">' + CITIES[key] + '</button>';
+    }).join('');
+
+    function toggleCity(key) {
+      if (!CITIES[key]) return;
+      const i = selectedCities.indexOf(key);
+      if (i === -1) selectedCities.push(key); else selectedCities.splice(i, 1);
+      renderCities();
+    }
+
+    function clearCities() {
+      selectedCities.length = 0;
+      renderCities();
+    }
+
+    function renderCities() {
+      document.querySelectorAll('[data-city]').forEach(function (el) {
+        const on = selectedCities.indexOf(el.dataset.city) !== -1;
+        el.classList.toggle('is-selected', on);
+        el.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      document.getElementById('routeInput').value = selectedCities.map(function (k) { return CITIES[k]; }).join(' → ');
+      document.getElementById('cityClear').classList.toggle('hidden', selectedCities.length === 0);
+    }
+
+    document.querySelectorAll('#cityLayer .city').forEach(function (el) {
+      el.addEventListener('click', function () { toggleCity(el.dataset.city); });
+      el.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleCity(el.dataset.city); }
+      });
     });
   </script>
 
